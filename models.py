@@ -48,9 +48,30 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f'User{self.email} has been added to the database'
     
-class ContactSchema(ma.Schema):
-    class Meta:
-        fields = ['id', 'name', 'email', 'phone_number', 'address']
+class Car_Collection(db.Model):
+    id = db.Column(db.String, primary_key = True)
+    make = db.Column(db.String(150), nullable = False)
+    model = db.Column(db.String(150), nullable = False)
+    year = db.Column(db.String(4), nullable = False)
+    user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
 
-contact_schema = ContactSchema()
-contacts_schema = ContactSchema(many=True)
+    def __init__(self,make,model,year,user_token, id = ''):
+        self.id = self.set_id()
+        self.make = make
+        self.model = model
+        self.year = year
+        self.user_token = user_token
+
+
+    def __repr__(self):
+        return f'You are now looking at: {self.make} {self.model} {self.year}'
+
+    def set_id(self):
+        return (secrets.token_urlsafe())
+    
+class InventorySchema(ma.Schema):
+    class Meta:
+        fields = ['id', 'make', 'model', 'year']
+
+inventory_schema = InventorySchema()
+inventories_schema = InventorySchema(many=True)
